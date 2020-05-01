@@ -1,28 +1,34 @@
 import * as Phaser from 'phaser'
+import constants from '../constants'
+import Warrior from '../entities/warrior'
+import warrior from '../entities/warrior'
 
 export default class RootScene extends Phaser.Scene {
+    private warrior;
+    private keys;
+
     constructor () {
         super('deity-doolhof');
     }
 
     init() {
-        console.log(">> Scene Starts", )
+        this.keys = this.input.keyboard.addKeys("DOWN, UP, RIGHT, LEFT")
     }
 
     preload () {
         this.load.image('logo', 'assets/phaser3-logo.png');
+        this.load.spritesheet(
+            constants.textures.entities.warrior,
+        'assets/sprites/warrior.png',
+        {frameHeight: 97, frameWidth: 84 }
+        );
     }
 
     create () {
-        const logo = this.add.image(window.innerWidth/2, 70, 'logo');
+        this.warrior = new Warrior(this, 100, 150 )
+    }
 
-        this.tweens.add({
-            targets: logo,
-            y: 350,
-            duration: 1500,
-            ease: 'Sine.inOut',
-            yoyo: true,
-            repeat: -1
-        })
+    update () {
+        this.warrior.handleMove(this.keys)
     }
 }
