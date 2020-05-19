@@ -30,11 +30,12 @@ const animationConfigs = [
         repeat: -1,
     },
 ]
-
 const baseSpeed = 2
 const runSpeed = baseSpeed * 2
 
 export default class Warrior extends Phaser.GameObjects.Sprite {
+    private velocityStep: number;
+
     constructor(scene: Phaser.Scene, x: number, y: number) {
         super(scene, x, y, constants.textures.entities.warrior)
         this.velocityStep = baseSpeed
@@ -58,24 +59,15 @@ export default class Warrior extends Phaser.GameObjects.Sprite {
         this.scene.add.existing(this)
     }
 
-    public handleMove = (keys) => {
-        
-        if (keys.DOWN.isDown) {
-            this.handleRun(keys.DOWN)
-            this.setY(this.y + this.velocityStep)
+    public walkAnimation = (direction: 'left' | 'right' | 'up' | 'down' | 'stop') => {
+        if (direction === 'down') {
             this.anims.play('walk-down', true)
-        } else if (keys.UP.isDown) {
-            this.handleRun(keys.UP)
-            this.setY(this.y - this.velocityStep)
+        } else if (direction === 'up') {
             this.anims.play('walk-up', true)
-        } else if (keys.RIGHT.isDown) {
-            this.handleRun(keys.RIGHT)
-            this.setX(this.x + this.velocityStep)
+        } else if (direction === 'right') {
             this.setFlipX(false)
             this.anims.play('walk', true)
-        } else if (keys.LEFT.isDown) {
-            this.handleRun(keys.LEFT)
-            this.setX(this.x - this.velocityStep)
+        } else if (direction === 'left') {
             this.setFlipX(true)
             this.anims.play('walk', true)
         } else {
@@ -83,7 +75,55 @@ export default class Warrior extends Phaser.GameObjects.Sprite {
         }
     }
 
-    private handleRun = (keyEvent) => {
+    public handleMove = (
+        keys: any,
+        onMove?: (moveDescription: {
+            direction: 'left' | 'right' | 'up' | 'down' | 'stop',
+            x: number,
+            y: number,
+        }) => void
+    ) => {
+        let direction: 'left' | 'right' | 'up' | 'down' | 'stop'
+
+        if (keys.DOWN.isDown) {
+            this.handleRun(keys.DOWN)
+            this.setY(this.y + this.velocityStep)
+            // this.anims.play('walk-down', true)
+            direction = 'down'
+        } else if (keys.UP.isDown) {
+            this.handleRun(keys.UP)
+            this.setY(this.y - this.velocityStep)
+            // this.anims.play('walk-up', true)
+            direction = 'up'
+        } else if (keys.RIGHT.isDown) {
+            this.handleRun(keys.RIGHT)
+            this.setX(this.x + this.velocityStep)
+            // this.setFlipX(false)
+            // this.anims.play('walk', true)
+            direction = 'right'
+        } else if (keys.LEFT.isDown) {
+            this.handleRun(keys.LEFT)
+            this.setX(this.x - this.velocityStep)
+            // this.setFlipX(true)
+            // this.anims.play('walk', true)
+            direction = 'left'
+        } else {
+            this.anims.stop()
+            direction = 'stop'
+        }
+
+        this.walkAnimation(direction)
+
+        if (onMove) {
+            onMove({
+                direction,
+                x: this.x,
+                y: this.y
+            })
+        }
+    }
+
+    private handleRun = (keyEvent: any) => {
         if (keyEvent.shiftKey) {
             this.velocityStep = runSpeed
         } else {
