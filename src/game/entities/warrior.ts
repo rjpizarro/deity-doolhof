@@ -1,4 +1,4 @@
-import * as Phaser from 'phaser'
+import { GameObjects, Scene } from 'phaser'
 import constants from '../constants'
 
 const animationConfigs = [
@@ -33,10 +33,10 @@ const animationConfigs = [
 const baseSpeed = 2
 const runSpeed = baseSpeed * 2
 
-export default class Warrior extends Phaser.GameObjects.Sprite {
+export default class Warrior extends GameObjects.Sprite {
     private velocityStep: number;
 
-    constructor(scene: Phaser.Scene, x: number, y: number) {
+    constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, constants.textures.entities.warrior)
         this.velocityStep = baseSpeed
 

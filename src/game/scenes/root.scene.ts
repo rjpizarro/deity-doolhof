@@ -1,10 +1,10 @@
-import * as Phaser from 'phaser'
+import { Scene } from 'phaser'
 import constants from '../constants'
 import Warrior from '../entities/warrior'
 import SocketIOClient from 'socket.io-client'
 import map from "lodash/map"
 
-export default class RootScene extends Phaser.Scene {
+export default class RootScene extends Scene {
     private warriors: any;
     private keys: any;
     private ioClient: SocketIOClient.Socket
