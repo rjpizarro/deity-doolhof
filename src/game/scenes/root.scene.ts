@@ -56,7 +56,7 @@ export default class RootScene extends Phaser.Scene {
         if (this.warriors[this.ioClient.id]) {
             this.warriors[this.ioClient.id].handleMove(
                 this.keys,
-                (moveDescription) => {
+                (moveDescription: any) => {
                     this.ioClient.emit('player-move', moveDescription)
                 }
             )
