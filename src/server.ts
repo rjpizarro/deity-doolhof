@@ -6,6 +6,7 @@ import {
 } from './server/socket-controller'
 
 const app: express.Application = express();
+const port = process.env.PORT || 8000
 
 app.use(express.static(path.resolve(__dirname, '../dist')))
 
@@ -13,8 +14,8 @@ app.get("/", (req, res) => {
     res.sendFile('/dist/index.html')
 })
 
-const AppServer = app.listen(8000, function () {
-    console.log(`App running on port ${8000}`);
+const AppServer = app.listen(port, function () {
+    console.log(`App running on port ${port}`);
 });
 
 const ioServer = listen(AppServer)
