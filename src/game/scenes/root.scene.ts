@@ -3,9 +3,10 @@ import constants from '../constants'
 import Warrior from '../entities/warrior'
 import SocketIOClient from 'socket.io-client'
 import map from "lodash/map"
+import get from "lodash/get"
 
 export default class RootScene extends Scene {
-    private warriors: any;
+    private warriors: { [id: string]: Warrior };
     private keys: any;
     private ioClient: SocketIOClient.Socket
 
@@ -29,27 +30,7 @@ export default class RootScene extends Scene {
 
     create () {
         this.ioClient.emit('new-player')
-        this.ioClient.on('all-players', (players: any) => {
-            map(players, (p: any) => {
-                this.warriors[p.id] = new Warrior(this, p.x, p.y)
-            })
-        })
-
-        this.ioClient.on('new-player-added', (player: any) => {
-            this.warriors[player.id] = new Warrior(this, player.x, player.y)
-        })
-
-        this.ioClient.on('player-disconnect', (playerId: string) => {
-            this.warriors[playerId].destroy()
-
-            delete this.warriors[playerId]
-        })
-
-        this.ioClient.on('player-move', (player: any) => {
-            this.warriors[player.id].setY(player.y)
-            this.warriors[player.id].setX(player.x)
-            this.warriors[player.id].walkAnimation(player.direction)
-        })
+        this._handleSocketMessages()
     }
 
     update () {
@@ -61,5 +42,43 @@ export default class RootScene extends Scene {
                 }
             )
         }
+    }
+
+    private _handleSocketMessages = () => {
+        // get all game players connected
+        this.ioClient.on('all-players', (players: [Player]) => {
+            map(players, (p) => {
+                this.warriors[p.id] = new Warrior(this, p.x, p.y)
+            })
+        })
+
+        // listen to new player connection
+        this.ioClient.on('new-player-connected', (player: Player) => {
+            this.warriors[player.id] = new Warrior(this, player.x, player.y)
+        })
+
+        // listen to player move
+        this.ioClient.on('player-move', (player: NextPlayerPosition) => {
+            const warrior = get(this.warriors, [player.id])
+
+            if (warrior) {
+                const actionByDirection = {
+                    up: () => warrior.moveUp(player.y),
+                    right: () => warrior.moveRight(player.x),
+                    down: () => warrior.moveDown(player.y),
+                    left: () => warrior.moveLeft(player.x),
+                    stop: warrior.stop,
+                }
+
+                actionByDirection[player.direction]()
+            }
+        })
+
+        // listen to player disconnect
+        this.ioClient.on('player-disconnect', (playerId: string) => {
+            this.warriors[playerId].destroy()
+
+            delete this.warriors[playerId]
+        })
     }
 }

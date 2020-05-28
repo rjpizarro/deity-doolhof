@@ -59,60 +59,68 @@ export default class Warrior extends GameObjects.Sprite {
         this.scene.add.existing(this)
     }
 
-    public walkAnimation = (direction: 'left' | 'right' | 'up' | 'down' | 'stop') => {
-        if (direction === 'down') {
-            this.anims.play('walk-down', true)
-        } else if (direction === 'up') {
-            this.anims.play('walk-up', true)
-        } else if (direction === 'right') {
+    public moveUp = (y: number) => {
+        this.setY(y)
+        this.anims.play('walk-up', true)
+    }
+
+    public moveRight = (x: number) => {
+        if (this.flipX) {
             this.setFlipX(false)
-            this.anims.play('walk', true)
-        } else if (direction === 'left') {
-            this.setFlipX(true)
-            this.anims.play('walk', true)
-        } else {
-            this.anims.stop()
         }
+
+        this.setX(x)
+        this.anims.play('walk', true)
+    }
+
+    public moveDown = (y: number) => {
+        this.setY(y)
+        this.anims.play('walk-down', true)
+    }
+
+    public moveLeft = (x: number) => {
+        if (!this.flipX) {
+            this.setFlipX(true)
+        }
+
+        this.setX(x)
+        this.anims.play('walk', true)
+    }
+
+    public stop = () => {
+        this.anims.stop()
     }
 
     public handleMove = (
         keys: any,
         onMove?: (moveDescription: {
-            direction: 'left' | 'right' | 'up' | 'down' | 'stop',
+            direction: PlayerMoveDirection,
             x: number,
             y: number,
         }) => void
     ) => {
-        let direction: 'left' | 'right' | 'up' | 'down' | 'stop'
+        let direction: PlayerMoveDirection
 
         if (keys.DOWN.isDown) {
+            this.moveDown(this.y + this.velocityStep)
             this.handleRun(keys.DOWN)
-            this.setY(this.y + this.velocityStep)
-            // this.anims.play('walk-down', true)
             direction = 'down'
         } else if (keys.UP.isDown) {
+            this.moveUp(this.y - this.velocityStep)
             this.handleRun(keys.UP)
-            this.setY(this.y - this.velocityStep)
-            // this.anims.play('walk-up', true)
             direction = 'up'
         } else if (keys.RIGHT.isDown) {
             this.handleRun(keys.RIGHT)
-            this.setX(this.x + this.velocityStep)
-            // this.setFlipX(false)
-            // this.anims.play('walk', true)
+            this.moveRight(this.x + this.velocityStep)
             direction = 'right'
         } else if (keys.LEFT.isDown) {
             this.handleRun(keys.LEFT)
-            this.setX(this.x - this.velocityStep)
-            // this.setFlipX(true)
-            // this.anims.play('walk', true)
+            this.moveLeft(this.x - this.velocityStep)
             direction = 'left'
         } else {
-            this.anims.stop()
+            this.stop()
             direction = 'stop'
         }
-
-        this.walkAnimation(direction)
 
         if (onMove) {
             onMove({

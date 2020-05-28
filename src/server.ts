@@ -2,7 +2,9 @@ import path from 'path'
 import express from 'express'
 import { listen } from 'socket.io'
 import {
-    addNewPlayer, updatePlayerPosition, removePlayer
+    addNewPlayer,
+    updatePlayerPosition,
+    removePlayer,
 } from './server/socket-controller'
 
 const app: express.Application = express();
@@ -26,11 +28,11 @@ ioServer.on('connection', (socket) => {
         addNewPlayer(socket, players)
     })
 
-    socket.on('disconnect', () => {
-        removePlayer(socket, players)
+    socket.on('player-move', (playerMoveDescription: PlayerMoveDescription) => {
+        updatePlayerPosition(socket, playerMoveDescription, players)
     })
 
-    socket.on('player-move', (playerMoveDescription) => {
-        updatePlayerPosition(socket, playerMoveDescription)
+    socket.on('disconnect', () => {
+        removePlayer(socket, players)
     })
 })

@@ -10,5 +10,5 @@ export default (socket: SocketIO.Socket, players: any,) => {
     players[socket.id] = newPlayer
 
     socket.emit('all-players', players)
-    socket.broadcast.emit('new-player-added', newPlayer)
+    socket.broadcast.emit('new-player-connected', newPlayer)
 }
