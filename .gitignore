@@ -4,6 +4,9 @@ build
 # IDE
 .idea
 
+# DESING
+image-edition
+
 # Logs
 logs
 *.log

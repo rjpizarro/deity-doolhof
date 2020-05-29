@@ -1,15 +1,15 @@
-type PlayerMoveDirection = 'up' | 'right' | 'down' | 'left' | 'stop'
+export type PlayerMoveDirection = 'up' | 'right' | 'down' | 'left' | 'stop'
 
-type Player = {
+export type Player = {
     id: string,
     x: number,
     y: number,
 }
 
-type PlayerMoveDescription = {
+export type PlayerMoveDescription = {
     x: number,
     y: number,
     direction: PlayerMoveDirection
 }
 
-type NextPlayerPosition = PlayerMoveDescription & { id: string }
+export type NextPlayerPosition = PlayerMoveDescription & { id: string }

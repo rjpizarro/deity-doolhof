@@ -6,6 +6,7 @@ import {
     updatePlayerPosition,
     removePlayer,
 } from './server/socket-controller'
+import {PlayerMoveDescription} from './types'
 
 const app: express.Application = express();
 const port = process.env.PORT || 8000

@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import SocketIO = require('socket.io')
+import {PlayerMoveDescription} from '../../types'
 
 export default (socket: SocketIO.Socket, moveDescription: PlayerMoveDescription, players: any,) => {
     const nextPlayerPosition = {
