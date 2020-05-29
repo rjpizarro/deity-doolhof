@@ -4,6 +4,7 @@ import Warrior from '../entities/warrior'
 import SocketIOClient from 'socket.io-client'
 import map from "lodash/map"
 import get from "lodash/get"
+import {NextPlayerPosition, Player} from '../../types'
 
 export default class RootScene extends Scene {
     private warriors: { [id: string]: Warrior };
@@ -24,7 +25,7 @@ export default class RootScene extends Scene {
         this.load.spritesheet(
             constants.textures.entities.warrior,
         'assets/sprites/warrior.png',
-        {frameHeight: 97, frameWidth: 84 }
+        {frameHeight: 150, frameWidth: 150 }
         );
     }
 

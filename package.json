@@ -45,7 +45,7 @@
   },
   "staticPath": {
     "source": [
-      "/assets"
+      "/src/assets"
     ],
     "target": [
       "/dist/assets"

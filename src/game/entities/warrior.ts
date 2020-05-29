@@ -1,37 +1,38 @@
 import { GameObjects, Scene } from 'phaser'
 import constants from '../constants'
+import {PlayerMoveDirection} from '../../types'
 
 const animationConfigs = [
     {
         key: 'walk',
         frames: {
-            start: 0,
-            end: 4,
+            start: 14,
+            end: 20,
         },
-        frameRate: 6,
+        frameRate: 7,
         repeat: -1,
     },
     {
         key: 'walk-down',
         frames: {
-            start: 6,
-            end: 9,
+            start: 0,
+            end: 6,
         },
-        frameRate: 6,
+        frameRate: 7,
         repeat: -1,
     },
     {
         key: 'walk-up',
         frames: {
-            start: 11,
-            end: 14,
+            start: 21,
+            end: 26,
         },
-        frameRate: 6,
+        frameRate: 7,
         repeat: -1,
     },
 ]
-const baseSpeed = 2
-const runSpeed = baseSpeed * 2
+const baseSpeed = 3
+const runSpeed = baseSpeed * 1.5
 
 export default class Warrior extends GameObjects.Sprite {
     private velocityStep: number;
